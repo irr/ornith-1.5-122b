@@ -51,7 +51,7 @@ Set any of these as environment variables:
 | `QUANT`          | `UD-Q4_K_XL`                                  | GGUF quant to download and serve                     |
 | `MODE`           | `general`                                     | `general` or `coding` sampling preset (model card)   |
 | `SPEC`           | `mtp`                                         | MTP self-speculative decoding; `none` disables it    |
-| `VISION`         | `0`                                           | `1` loads `mmproj-F16.gguf` for image input          |
+| `VISION`         | `1`                                           | Loads `mmproj-F16.gguf` for image input; `0` disables |
 | `KV_TYPE`        | `f16`                                         | KV cache type; `q8_0` halves it                      |
 | `CTX`            | `262144`                                      | Total context, shared by all slots                   |
 | `PARALLEL`       | `1`                                           | Number of slots                                      |

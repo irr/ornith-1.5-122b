@@ -8,7 +8,7 @@
 #   QUANT=UD-Q5_K_XL ./serve-ornith.sh   # higher quality, ~104 GB resident (tight)
 #   MODE=coding ./serve-ornith.sh        # card's "precise coding" sampling defaults
 #   SPEC=none ./serve-ornith.sh          # disable MTP self-speculation (on by default)
-#   VISION=1 ./serve-ornith.sh           # load the vision projector for image input
+#   VISION=0 ./serve-ornith.sh           # skip the vision projector (image input on by default)
 #
 # OpenAI-compatible API: http://localhost:${PORT}/v1   (model name: Ornith-1.5-122B)
 set -euo pipefail
@@ -26,7 +26,7 @@ PARALLEL="${PARALLEL:-1}"     # slots share CTX; 1 slot = full 262144 tokens for
 KV_TYPE="${KV_TYPE:-f16}"     # f16 KV is only ~6 GiB at 262k (12 full-attn layers x 2 KV heads); q8_0 halves it
 MODE="${MODE:-coding}"       # general | coding
 SPEC="${SPEC:-mtp}"           # mtp | none
-VISION="${VISION:-0}"         # 1 = load mmproj for image input (+0.9 GB)
+VISION="${VISION:-1}"         # 1 = load mmproj for image input (+0.9 GB), 0 = text only
 
 echo "=== Ornith-1.5-122B (llama.cpp / Vulkan) ==="
 echo "Models directory: ${MODELS_DIR}"
