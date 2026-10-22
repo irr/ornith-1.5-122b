@@ -32,7 +32,7 @@ CONTAINER_NAME="${CONTAINER_NAME:-ornith-1.5-122b}"
 PORT="${PORT:-8000}"          # host port to publish
 API_PORT="8080"               # container-side llama-server port
 CTX="${CTX:-262144}"
-PARALLEL="${PARALLEL:-1}"     # slots share CTX; 1 slot = full 262144 tokens for one request
+PARALLEL="${PARALLEL:-4}"     # concurrent requests; with --kv-unified all slots share one CTX-token KV cache
 KV_TYPE="${KV_TYPE:-f16}"     # f16 KV is only ~6 GiB at 262k (12 full-attn layers x 2 KV heads); q8_0 halves it
 MODE="${MODE:-coding}"       # general | coding
 SPEC="${SPEC:-mtp}"           # mtp | dflash | none
@@ -119,6 +119,7 @@ exec docker run --rm -p "${PORT}:${API_PORT}" \
     --host 0.0.0.0 --port "${API_PORT}" \
     --ctx-size "${CTX}" \
     --parallel "${PARALLEL}" \
+    --kv-unified \
     --n-gpu-layers 999 \
     --flash-attn on \
     --cache-type-k "${KV_TYPE}" --cache-type-v "${KV_TYPE}" \

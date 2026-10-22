@@ -42,7 +42,7 @@ supports this architecture (Qwen3.5 MoE: hybrid Gated DeltaNet + gated attention
 2. **Resolves GPU group GIDs numerically** from `/dev/kfd` and `/dev/dri/*`.
    Docker Engine 29 can't resolve host group names like `render` inside the image.
 3. **Starts `llama-server`** (`docker run --rm`), with `./models` mounted read-only
-   at `/models`, every layer on the GPU, flash attention, one 262144-token slot,
+   at `/models`, every layer on the GPU, flash attention, 4 parallel slots sharing one 262144-token KV cache,
    context checkpoints plus a RAM prompt cache (so long prompts can be reused),
    reasoning returned in `reasoning_content`, and the model card's sampling defaults.
    Speculative decoding uses the model's built-in MTP head by default. `SPEC=dflash` uses the
@@ -74,8 +74,8 @@ Set any of these as environment variables:
 | `DRAFT_N_MAX`    | `4`                                           | DFlash draft tokens per step (max 15)                |
 | `VISION`         | `1`                                           | Loads `mmproj-F16.gguf` for image input; `0` disables |
 | `KV_TYPE`        | `f16`                                         | KV cache type; `q8_0` halves it                      |
-| `CTX`            | `262144`                                      | Total context, shared by all slots                   |
-| `PARALLEL`       | `1`                                           | Number of slots                                      |
+| `CTX`            | `262144`                                      | Total context, pooled across all slots (`--kv-unified`) |
+| `PARALLEL`       | `4`                                           | Number of slots (concurrent requests)                |
 | `PORT`           | `8000`                                        | Host port the API is published on                    |
 | `IMAGE`          | `kyuz0/amd-strix-halo-toolboxes:vulkan-radv`  | Server image                                         |
 | `CONTAINER_NAME` | `ornith-1.5-122b`                             | Name for `docker run --name`                         |
